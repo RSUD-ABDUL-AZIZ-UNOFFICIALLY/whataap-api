@@ -9,6 +9,13 @@ module.exports = {
     send: async (req, res) => {
         let data = req.body;
         try {
+            if (data.message == undefined || data.telp == undefined ) {
+                return res.status(400).json({
+                    status: false,
+                    message: 'message and telp is required',
+                });
+                
+            }
             let pesan = data.message.toString();
             let noHp = phoneNumberFormatter(data.telp);
             const isRegistered = await checkRegisteredNumber(noHp);
@@ -34,6 +41,7 @@ module.exports = {
            
         } catch (error) {
             console.log(error);
+            client.initialize();
             return res.status(400).json({
                 status: false,
                 message: 'whatsapp failed send',
