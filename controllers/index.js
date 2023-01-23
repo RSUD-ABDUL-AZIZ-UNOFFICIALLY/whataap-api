@@ -8,9 +8,9 @@ const checkRegisteredNumber = async function (number) {
 module.exports = {
     send: async (req, res) => {
         let data = req.body;
-        let noHp = phoneNumberFormatter(data.telp);
         let pesan = data.message.toString();
         try {
+            let noHp = phoneNumberFormatter(data.telp);
             const isRegistered = await checkRegisteredNumber(noHp);
             console.log(isRegistered);
             if (isRegistered) {
