@@ -55,5 +55,42 @@ module.exports = {
             message: 'whatsapp reset state',
             data: state
         });
-    }
+    },
+    getProfilePic: async (req, res) => {
+        try {
+            let data = req.body;
+            if (data.telp == undefined ) {
+                return res.status(400).json({
+                    status: false,
+                    message: 'telp is required',
+                });
+            }
+            let noHp = phoneNumberFormatter(data.telp);
+            const isRegistered = await checkRegisteredNumber(noHp);
+            console.log(isRegistered);
+            if (isRegistered) {
+                console.log('WHATSAPP WEB => User registered');
+                let url = await client.getProfilePicUrl(noHp)
+                return res.status(200).json({
+                    status: false,
+                    message: 'telp is registered',
+                    data: url
+                });
+            } else {
+                console.log('WHATSAPP WEB => User not registered');
+                return res.status(400).json({
+                    status: false,
+                    message: 'User not registered',
+                    data: noHp
+                });
+            }
+        } catch (error) {
+            return res.status(400).json({
+                status: false,
+                message: 'whatsapp failed send',
+                error: error
+            });
+
+        }
+    },
 };
