@@ -1,6 +1,6 @@
 const { phoneNumberFormatter } = require('../helpers/formatter');
 
-const client = require('../controllers/whataap');
+const {client} = require('../controllers/whataap');
 const checkRegisteredNumber = async function (number) {
     const isRegistered = await client.isRegisteredUser(number);
     return isRegistered;
@@ -8,8 +8,8 @@ const checkRegisteredNumber = async function (number) {
 module.exports = {
     send: async (req, res) => {
         let data = req.body;
-        let pesan = data.message.toString();
         try {
+            let pesan = data.message.toString();
             let noHp = phoneNumberFormatter(data.telp);
             const isRegistered = await checkRegisteredNumber(noHp);
             console.log(isRegistered);
@@ -34,13 +34,18 @@ module.exports = {
            
         } catch (error) {
             console.log(error);
-            return res.status(500).json({
+            return res.status(400).json({
                 status: false,
-                message: error,
-                data: noHp
+                message: 'whatsapp failed send',
             });
         }
     },
-    sated: async (req, res) => {
+    state: async (req, res) => {
+        let state = await client.getBatteryStatus();
+        return res.status(200).json({
+            status: true,
+            message: 'whatsapp reset state',
+            data: state
+        });
     }
 };

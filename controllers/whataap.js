@@ -1,4 +1,4 @@
-const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
+const { Client, LocalAuth, ClientInfo } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const client = new Client({
     // authStrategy: new NoAuth({
@@ -53,4 +53,6 @@ client.on('change_state', state => {
     console.log('CHANGE STATE', state);
 });
 
-module.exports = client;
+module.exports = {
+    client
+}
